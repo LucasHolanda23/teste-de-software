@@ -1,13 +1,17 @@
 # Como rodar
 
 **Linux:**
-```bash/fish/zsh
+```bash
+python ou py -m venv venv
 source venv/bin/activate
-python/py app.py
+pip install -r requirements.txt
+python ou py app.py
 ```
 
 **Windows:**
-```bash/fish/zsh
-.\venv\Scripts\activate
-python/py app.py
+```bash
+ python ou py -m venv venv
+.\venv\Scripts\activate -------- se nao funcionar, pra evitar dor cabeca, mude para Git bash e rode --> source venv/Scripts/activate
+pip install -r requirements.txt
+python ou py app.py
 ```
