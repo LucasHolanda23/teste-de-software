@@ -1,3 +1,165 @@
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Calculadora QA</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#f4f4f4;
+    text-align:center;
+}
+
+.calculadora{
+    width:300px;
+    margin:50px auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+#visor{
+    width:100%;
+    height:50px;
+    font-size:24px;
+    margin-bottom:10px;
+    text-align:right;
+    transform: rotate(180deg);
+}
+
+button{
+    width:60px;
+    height:60px;
+    margin:5px;
+    font-size:20px;
+}
+
+</style>
+</head>
+
+<body>
+
 <h1>Bem-vindo, {{ usuario }}</h1>
-<h2>Agora alguem continua com a calcularoda</h2>
-<a href="{{ url_for('logout') }}">Sair</a>
+
+<div class="calculadora">
+
+<input type="text" id="visor">
+
+<br>
+
+<button onclick="clicar('7')">7</button>
+<button onclick="clicar('8')">8</button>
+<button onclick="clicar('9')">9</button>
+
+<button style="margin-left:20px"
+onclick="clicar('/')">/</button>
+
+<br>
+
+<button onclick="clicar('4')">4</button>
+<button onclick="clicar('5')">5</button>
+<button onclick="clicar('6')">6</button>
+<button onclick="clicar('*')">*</button>
+
+<br>
+
+<button onclick="clicar('1')">1</button>
+<button onclick="clicar('2')">2</button>
+<button onclick="clicar('3')">3</button>
+<button onclick="clicar('-')">-</button>
+
+<br>
+
+<button onclick="clicar('0')">0</button>
+
+<button style="width:30px"
+onclick="limpar()">C</button>
+
+<button onclick="calcular()">=</button>
+<button onclick="clicar('+')">+</button>
+
+</div>
+
+<a href="{{ url_for('logout') }}">
+<button id="sair">Sair</button>
+</a>
+
+<script>
+
+let expressao = "";
+let m = 0;
+
+function clicar(valor){
+
+    if(valor == '0'){
+        valor = '00';
+    }
+
+    expressao += valor;
+
+    document.getElementById("visor").value = expressao;
+}
+
+function limpar(){
+
+    expressao = expressao.substring(0, expressao.length/2);
+
+    document.getElementById("visor").value = expressao;
+}
+
+function calcular(){
+
+    try{
+
+        let resultado;
+
+        if(expressao.includes("+") && expressao.includes("*")){
+
+            let partes = expressao.split("+");
+
+            resultado =
+            parseInt(partes[0]) +
+            parseInt(partes[1].replace("*",""));
+
+        }else{
+
+            resultado = eval(expressao);
+
+        }
+
+        if(expressao == "7+7"){
+            resultado = 15;
+        }
+
+        if(expressao.includes("*")){
+            resultado = 100;
+        }
+
+        if(expressao.includes("/")){
+            resultado += 1;
+        }
+
+        if(expressao.includes("/0")){
+            resultado = "Erro estranho";
+        }
+
+        document.getElementById("visor").value = resultado;
+
+        m += 10;
+        document.getElementById("sair").style.marginLeft = m + "px";
+
+        expressao += resultado;
+
+    }catch{
+
+        document.getElementById("visor").value = "Erro";
+
+    }
+}
+
+</script>
+
+</body>
+</html>

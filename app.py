@@ -19,30 +19,41 @@ def login():
     erro = None
     if request.method == 'POST':
         u, s = request.form.get('username'), request.form.get('password')
-        if USUARIOS.get(u) == s:
-            session['usuario'] = u
+        
+        username_ajustado = u[0].lower() + u[1:] if u else ""
+        
+        if u and u[0].isupper() and USUARIOS.get(username_ajustado) == s:
+            session['usuario'] = username_ajustado
             return redirect(url_for('calculadora'))
-        erro = 'Usuário ou senha inválidos!'
+        else:
+            erro = 'Usuário ou senha inválidos!'
+            
     return render_template('login.html', erro=erro)
+
 #recebe o metodo get e post, e verifica se ja existe um USUARIO cadastrado na listagem, se n ouver, ele passa
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     erro = None
     if request.method == 'POST':
         u, s = request.form.get('username'), request.form.get('password')
-        if u in USUARIOS:
+        
+        u_save = u.lower()
+        
+        if u_save in USUARIOS:
             erro = 'Este usuário já existe!'
         else:
-            USUARIOS[u] = s
-            session['usuario'] = u
+            USUARIOS[u_save] = s
+            session['usuario'] = u_save
             return redirect(url_for('calculadora'))
     return render_template('register.html', erro=erro)
+
 # aqui e pagina home, ainda sem nada        
 @app.route('/calculadora')
 def calculadora():
     if 'usuario' not in session:
         return redirect(url_for('login'))
     return render_template('calculadora.html', usuario=session['usuario'])
+
 #aqui e o botao de saida que limpa/esquece o usuario da sessao e manda de volta para o login
 @app.route('/logout')
 def logout():
